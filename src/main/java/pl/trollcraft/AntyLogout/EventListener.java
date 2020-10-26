@@ -6,6 +6,7 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Animals;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,6 +16,8 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.ArrayList;
 
 public class EventListener implements Listener {
 
@@ -30,11 +33,14 @@ public class EventListener implements Listener {
                         .getRegionContainer()
                         .get(BukkitAdapter.adapt(player.getWorld()));
                 assert regionManager != null;
-                ProtectedRegion set = regionManager
-                        .getRegion("pvp_");
-                assert set != null;
-                boolean test = set.contains(location.getBlockX(), location.getBlockY(), location.getBlockZ());
-                if (test) {
+                ArrayList<String> strefa = new ArrayList<>((ArrayList<String>) AntyLogout.getInstance().getConfig().getList("regiony"));
+                for (String region : strefa) {
+                    ArrayList<ProtectedRegion> arena = new ArrayList<>((ArrayList<ProtectedRegion>)regionManager.getRegion(region));
+                }
+                assert strefa != null;
+                boolean region = ;
+                boolean test = strefa.contains(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+                if (test || region) {
                     Player atacker = ((Player) ev.getDamager()).getPlayer();
                     Player victim = ((Player) ev.getEntity()).getPlayer();
                     TimestampManager.getInstance().setCooldown(atacker.getUniqueId(), 30000);
