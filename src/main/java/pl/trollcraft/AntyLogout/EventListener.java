@@ -6,7 +6,6 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Animals;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -33,14 +32,20 @@ public class EventListener implements Listener {
                         .getRegionContainer()
                         .get(BukkitAdapter.adapt(player.getWorld()));
                 assert regionManager != null;
-                ArrayList<String> strefa = new ArrayList<>((ArrayList<String>) AntyLogout.getInstance().getConfig().getList("regiony"));
-                for (String region : strefa) {
-                    ArrayList<ProtectedRegion> arena = new ArrayList<>((ArrayList<ProtectedRegion>)regionManager.getRegion(region));
+                ArrayList<String> strefa = (ArrayList<String>) AntyLogout.getInstance().getConfig().getList("regiony");
+
+                ArrayList<ProtectedRegion> regiony = new ArrayList<>();
+                for(String region_name : strefa){
+                    regiony.add(regionManager.getRegion(region_name));
                 }
-                assert strefa != null;
-                boolean region = ;
-                boolean test = strefa.contains(location.getBlockX(), location.getBlockY(), location.getBlockZ());
-                if (test || region) {
+                boolean test = false;
+                for (ProtectedRegion region : regiony) {
+                    if (region.contains(location.getBlockX(), location.getBlockY(), location.getBlockZ())) {
+                        test = true;
+                    }
+                }
+
+                if (test) {
                     Player atacker = ((Player) ev.getDamager()).getPlayer();
                     Player victim = ((Player) ev.getEntity()).getPlayer();
                     TimestampManager.getInstance().setCooldown(atacker.getUniqueId(), 30000);
@@ -75,7 +80,6 @@ public class EventListener implements Listener {
     private void dropItems(Player player) {
         ItemStack[] stack = player.getInventory().getContents();
         ItemStack[] armorstack = player.getInventory().getArmorContents();
-        ItemStack base = new ItemStack(Material.CHEST);
         for (ItemStack itemStack : armorstack) {
             if (itemStack == null) {
                 itemStack = new ItemStack(Material.AIR);
