@@ -33,7 +33,6 @@ public class EventListener implements Listener {
                         .get(BukkitAdapter.adapt(player.getWorld()));
                 assert regionManager != null;
                 ArrayList<String> strefa = (ArrayList<String>) AntyLogout.getInstance().getConfig().getList("regiony");
-
                 ArrayList<ProtectedRegion> regiony = new ArrayList<>();
                 for(String region_name : strefa){
                     regiony.add(regionManager.getRegion(region_name));
@@ -44,7 +43,6 @@ public class EventListener implements Listener {
                         test = true;
                     }
                 }
-
                 if (test) {
                     Player atacker = ((Player) ev.getDamager()).getPlayer();
                     Player victim = ((Player) ev.getEntity()).getPlayer();
@@ -54,7 +52,6 @@ public class EventListener implements Listener {
             }
         }
     }
-
     public void onQuit(PlayerQuitEvent event) {
         double cooldown = TimestampManager.getInstance().getCooldown(event.getPlayer().getUniqueId());
         if (cooldown > 0) {
@@ -64,11 +61,11 @@ public class EventListener implements Listener {
             ItemMeta meta = paper.getItemMeta();
             meta.getLore().set(1, "Lognales podczas walki wiec tracisz itemy!");
             meta.setDisplayName(Helper.color("&cInformacja"));
+            paper.setItemMeta(meta);
             player.getInventory().setItem(0, paper);
             dropItems(player);
         }
     }
-
     public void onCommand(PlayerCommandPreprocessEvent event) {
         double cooldown = TimestampManager.getInstance().getCooldown(event.getPlayer().getUniqueId());
         if (cooldown > 0) {
@@ -76,7 +73,6 @@ public class EventListener implements Listener {
             event.getPlayer().sendMessage(Helper.color("&f[&4Anti&cLogout&f] &cJestes w walce! Walcz, a nie uzywasz komend!"));
         }
     }
-
     private void dropItems(Player player) {
         ItemStack[] stack = player.getInventory().getContents();
         ItemStack[] armorstack = player.getInventory().getArmorContents();
