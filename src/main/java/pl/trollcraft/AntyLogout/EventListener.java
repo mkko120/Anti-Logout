@@ -46,8 +46,8 @@ public class EventListener implements Listener {
                 if (test) {
                     Player atacker = ((Player) ev.getDamager()).getPlayer();
                     Player victim = ((Player) ev.getEntity()).getPlayer();
-                    TimestampManager.getInstance().setCooldown(atacker.getUniqueId(), 30000);
-                    TimestampManager.getInstance().setCooldown(victim.getUniqueId(), 30000);
+                    TimestampManager.getInstance().setCooldown(atacker.getUniqueId(), AntyLogout.getInstance().getConfig().getInt("czas"));
+                    TimestampManager.getInstance().setCooldown(victim.getUniqueId(), AntyLogout.getInstance().getConfig().getInt("czas"));
                 }
             }
         }
@@ -62,15 +62,16 @@ public class EventListener implements Listener {
             meta.getLore().set(1, "Lognales podczas walki wiec tracisz itemy!");
             meta.setDisplayName(Helper.color("&cInformacja"));
             paper.setItemMeta(meta);
-            player.getInventory().setItem(0, paper);
+            player.getInventory().setItem(36, paper);
             dropItems(player);
         }
     }
     public void onCommand(PlayerCommandPreprocessEvent event) {
         double cooldown = TimestampManager.getInstance().getCooldown(event.getPlayer().getUniqueId());
         if (cooldown > 0) {
+            int cooldownZostalo = (int) cooldown / 1000;
             event.setCancelled(true);
-            event.getPlayer().sendMessage(Helper.color("&f[&4Anti&cLogout&f] &cJestes w walce! Walcz, a nie uzywasz komend!"));
+            event.getPlayer().sendMessage(Helper.color("&6[&4Anti&cLogout&6] &cJestes w walce! Walcz, a nie uzywasz komend! \n Do końca walki pozostało: " + cooldownZostalo));
         }
     }
     private void dropItems(Player player) {
