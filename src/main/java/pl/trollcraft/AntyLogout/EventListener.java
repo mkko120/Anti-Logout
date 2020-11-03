@@ -101,7 +101,7 @@ public class EventListener implements Listener {
             meta.setDisplayName(Helper.color("&cInformacja"));
             meta.getLore().set(1, "Lognales podczas walki wiec tracisz itemy!");
             paper.setItemMeta(meta);
-            player.getInventory().setItem(36, paper);
+            player.getInventory().setItemInMainHand(paper);
             dropItems(player);
         }
     }
