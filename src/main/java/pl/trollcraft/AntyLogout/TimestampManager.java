@@ -15,7 +15,7 @@ public class TimestampManager {
 
     private final Map<Player, Integer> cooldowns = new HashMap<>();
 
-    public static final int DEFAULT_COOLDOWN = AntyLogout.getInstance().getConfig().getInt("cooldown");
+    public static final int DEFAULT_COOLDOWN = AntyLogout.getInstance().getConfig().getInt("czas");
 
     public void setCooldown(Player player, int time){
         if(time < 1) {
