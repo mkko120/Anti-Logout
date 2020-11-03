@@ -1,8 +1,9 @@
 package pl.trollcraft.AntyLogout;
 
+import org.bukkit.entity.Player;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class TimestampManager {
 
@@ -12,11 +13,11 @@ public class TimestampManager {
         return instance;
     }
 
-    private final Map<UUID, Integer> cooldowns = new HashMap<>();
+    private final Map<Player, Integer> cooldowns = new HashMap<>();
 
-    public static final int DEFAULT_COOLDOWN = 15;
+    public static final int DEFAULT_COOLDOWN = AntyLogout.getInstance().getConfig().getInt("cooldown");
 
-    public void setCooldown(UUID player, int time){
+    public void setCooldown(Player player, int time){
         if(time < 1) {
             cooldowns.remove(player);
         } else {
@@ -24,7 +25,7 @@ public class TimestampManager {
         }
     }
 
-    public int getCooldown(UUID player) {
+    public int getCooldown(Player player) {
         return cooldowns.getOrDefault(player, 0);
     }
 }

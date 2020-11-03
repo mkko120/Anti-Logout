@@ -2,6 +2,7 @@ package pl.trollcraft.AntyLogout;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import java.io.File;
 
@@ -12,8 +13,11 @@ public class AntyLogout extends JavaPlugin {
         return instance;
     }
 
+
+
     @Override
     public void onEnable() {
+        BukkitScheduler scheduler = getServer().getScheduler();
         instance = this;
         final FileConfiguration config = getInstance().getConfig();
         File file = new File(instance.getDataFolder(), "config.yml");
@@ -23,4 +27,8 @@ public class AntyLogout extends JavaPlugin {
         }
         getServer().getPluginManager().registerEvents(new EventListener(), this);
     }
+
+
+
+
 }

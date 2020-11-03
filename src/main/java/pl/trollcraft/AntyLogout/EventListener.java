@@ -4,6 +4,8 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -12,14 +14,18 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import javax.swing.text.Position;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class EventListener implements Listener {
-
+    private final HashMap<Player, Float> xp = new HashMap<>();
+    private final HashMap<Player, Integer> lvl = new HashMap<>();
     @EventHandler
     public void onDamage(EntityDamageEvent event) {
         if (event instanceof EntityDamageByEntityEvent) {
@@ -32,11 +38,15 @@ public class EventListener implements Listener {
                         .getRegionContainer()
                         .get(BukkitAdapter.adapt(player.getWorld()));
                 assert regionManager != null;
-                ArrayList<String> strefa = (ArrayList<String>) AntyLogout.getInstance().getConfig().getList("regiony");
+                ArrayList<String> strefa = (ArrayList<String>) AntyLogout
+                        .getInstance()
+                        .getConfig()
+                        .getList("regiony");
                 ArrayList<ProtectedRegion> regiony = new ArrayList<>();
                 for(String region_name : strefa){
                     regiony.add(regionManager.getRegion(region_name));
                 }
+
                 boolean test = false;
                 for (ProtectedRegion region : regiony) {
                     if (region.contains(location.getBlockX(), location.getBlockY(), location.getBlockZ())) {
@@ -44,30 +54,54 @@ public class EventListener implements Listener {
                     }
                 }
                 if (test) {
+
                     Player atacker = ((Player) ev.getDamager()).getPlayer();
                     Player victim = ((Player) ev.getEntity()).getPlayer();
-                    TimestampManager.getInstance().setCooldown(atacker.getUniqueId(), AntyLogout.getInstance().getConfig().getInt("czas"));
-                    TimestampManager.getInstance().setCooldown(victim.getUniqueId(), AntyLogout.getInstance().getConfig().getInt("czas"));
+                    TimestampManager.getInstance().setCooldown(atacker, AntyLogout
+                            .getInstance()
+                            .getConfig()
+                            .getInt("czas"));
+                    TimestampManager.getInstance().setCooldown(victim, AntyLogout
+                            .getInstance()
+                            .getConfig()
+                            .getInt("czas"));
                 }
             }
         }
     }
+
+    public void barRefresh(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        if (TimestampManager.getInstance().getCooldown(player) > 0) {
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(Helper.color("&cJestes w walce!")));
+            if (xp.get(player) == null) {
+                xp.put(player, player.getExp());
+                lvl.put(player, player.getLevel());
+            }
+            player.setExp(barChanger(player));
+            player.setLevel(TimestampManager.getInstance().getCooldown(player));
+        }
+    }
     public void onQuit(PlayerQuitEvent event) {
-        double cooldown = TimestampManager.getInstance().getCooldown(event.getPlayer().getUniqueId());
+        double cooldown = TimestampManager
+                .getInstance()
+                .getCooldown(event.getPlayer());
         if (cooldown > 0) {
             Player player = event.getPlayer();
             player.getInventory().clear();
             ItemStack paper = new ItemStack(Material.PAPER);
             ItemMeta meta = paper.getItemMeta();
-            meta.getLore().set(1, "Lognales podczas walki wiec tracisz itemy!");
             meta.setDisplayName(Helper.color("&cInformacja"));
+            meta.getLore().set(1, "Lognales podczas walki wiec tracisz itemy!");
             paper.setItemMeta(meta);
             player.getInventory().setItem(36, paper);
             dropItems(player);
         }
     }
     public void onCommand(PlayerCommandPreprocessEvent event) {
-        double cooldown = TimestampManager.getInstance().getCooldown(event.getPlayer().getUniqueId());
+        double cooldown = TimestampManager
+                .getInstance()
+                .getCooldown(event.getPlayer());
         if (cooldown > 0) {
             int cooldownZostalo = (int) cooldown / 1000;
             event.setCancelled(true);
@@ -89,5 +123,11 @@ public class EventListener implements Listener {
             }
             player.getWorld().dropItemNaturally(player.getLocation(), itemStack);
         }
+    }
+    private float barChanger(Player player) {
+        float x = TimestampManager.getInstance().getCooldown(player);
+        float z = TimestampManager.DEFAULT_COOLDOWN;
+        return x / z;
+
     }
 }
