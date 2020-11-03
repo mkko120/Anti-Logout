@@ -65,10 +65,12 @@ public class EventListener implements Listener {
                         public void run() {
                             int timeLeftAtacker = TimestampManager.getInstance().getCooldown(atacker);
                             int timeLeftVictim = TimestampManager.getInstance().getCooldown(victim);
-                            TimestampManager.getInstance().setCooldown(player, --timeLeftAtacker);
-                            TimestampManager.getInstance().setCooldown(player, --timeLeftAtacker);
+                            TimestampManager.getInstance().setCooldown(atacker, --timeLeftAtacker);
+                            TimestampManager.getInstance().setCooldown(victim, --timeLeftVictim);
                             if(timeLeftAtacker == 0 || timeLeftVictim == 0){
                                 this.cancel();
+                                TimestampManager.getInstance().setCooldown(atacker, 0);
+                                TimestampManager.getInstance().setCooldown(victim, 0);
                             }
                         }
                     }.runTaskTimer(AntyLogout.getPlugin(AntyLogout.class), 20, 20);
