@@ -74,12 +74,19 @@ public class EventListener implements Listener {
         Player player = event.getPlayer();
         if (TimestampManager.getInstance().getCooldown(player) > 0) {
             player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(Helper.color("&cJestes w walce!")));
-            if (xp.get(player) == null) {
+            if (xp.get(player) == null && lvl.get(player) == null) {
                 xp.put(player, player.getExp());
                 lvl.put(player, player.getLevel());
             }
             player.setExp(barChanger(player));
             player.setLevel(TimestampManager.getInstance().getCooldown(player));
+        } else {
+            if (xp.get(player) != null && lvl.get(player) != null) {
+                player.setExp(xp.get(player));
+                player.setLevel(lvl.get(player));
+                xp.remove(player);
+                lvl.remove(player);
+            }
         }
     }
     public void onQuit(PlayerQuitEvent event) {
