@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import javax.swing.text.Position;
 import java.util.ArrayList;
@@ -57,14 +58,21 @@ public class EventListener implements Listener {
 
                     Player atacker = ((Player) ev.getDamager()).getPlayer();
                     Player victim = ((Player) ev.getEntity()).getPlayer();
-                    TimestampManager.getInstance().setCooldown(atacker, AntyLogout
-                            .getInstance()
-                            .getConfig()
-                            .getInt("czas"));
-                    TimestampManager.getInstance().setCooldown(victim, AntyLogout
-                            .getInstance()
-                            .getConfig()
-                            .getInt("czas"));
+                    TimestampManager.getInstance().setCooldown(atacker, TimestampManager.DEFAULT_COOLDOWN);
+                    TimestampManager.getInstance().setCooldown(victim, TimestampManager.DEFAULT_COOLDOWN);
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            int timeLeftAtacker = TimestampManager.getInstance().getCooldown(atacker);
+                            int timeLeftVictim = TimestampManager.getInstance().getCooldown(victim);
+                            TimestampManager.getInstance().setCooldown(player, --timeLeftAtacker);
+                            TimestampManager.getInstance().setCooldown(player, --timeLeftAtacker);
+                            if(timeLeftAtacker == 0 || timeLeftVictim == 0){
+                                this.cancel();
+                            }
+                        }
+                    }.runTaskTimer(AntyLogout.getPlugin(AntyLogout.class), 20, 20);
+
                 }
             }
         }
