@@ -5,6 +5,4 @@ regiony:
   - od myslnika
 
 #Tutaj wpisz ile ma cooldown trwac.
-cooldown:
-#Ponizej pojawia sie itemy/nagrody za parkour dodane komenda /nagroda hand jako serializowane dane !nie ruszac jezeli nie wiesz co robisz!
-items:
+czas:
