@@ -1,8 +1,13 @@
-regiony:
+regiony pvp:
   - wymiencie
   - tutaj
-  - jakies
-  - od myslnika
+  - regiony na ktorych walacza
+  - tylko gracze.
 
+regiony dungeon:
+  - wymiencie
+  - tutaj
+  - regiony na ktorych
+  - walcza tez moby.
 #Tutaj wpisz ile ma cooldown trwac.
-czas:
+cooldown:
