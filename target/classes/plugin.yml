@@ -1,0 +1,7 @@
+main: pl.trollcraft.AntyLogout.AntyLogout
+version: 1.0
+name: Anti-Logout
+description: Plugin do zabijania graczy po wyjsciu podczas walki
+depend:
+  - WorldEdit
+  - WorldGuard
