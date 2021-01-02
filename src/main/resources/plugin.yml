@@ -1,7 +1,43 @@
 main: pl.trollcraft.AntyLogout.AntyLogout
 version: 1.0
 name: Anti-Logout
+api-version: 1.16
 description: Plugin do zabijania graczy po wyjsciu podczas walki
 depend:
   - WorldEdit
   - WorldGuard
+commands:
+  logoutreload:
+    description: Reloads plugin's configuration.
+    permission: antilogout.reload
+  logoutstatistics:
+    description: Getting statistics of specified player
+    aliases:
+      - stats
+      - statistics
+    permission: antilogout.stats
+permissions:
+  antilogout.*:
+    default: op
+    children:
+      - antilogout.reload
+      - antilogout.override
+      - antilogout.stats
+  antilogout.reload:
+    default: false
+    description: Permission to reload config of the plugin.
+  antilogout.override:
+    default: false
+    description: Permission to override antilogout's system.
+  antilogout.stats:
+    children:
+      - antilogout.stats.me
+      - antilogout.stats.others
+    default: op
+    description: Permission to all functions of stats
+  antilogout.stats.me:
+    default: true
+    description: Permission to read your own stats.
+  antilogout.stats.others:
+    default: false
+    description: Permission to read someone's stats.

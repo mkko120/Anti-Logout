@@ -1,13 +1,9 @@
+#Tutaj wpisz nazwe swiatu na ktorym ma byc antylogout
+swiat: world
 regiony pvp:
-  - wymiencie
-  - tutaj
-  - regiony na ktorych walacza
-  - tylko gracze.
+  - pvp
 
 regiony dungeon:
-  - wymiencie
-  - tutaj
-  - regiony na ktorych
-  - walcza tez moby.
+  - dungeon
 #Tutaj wpisz ile ma cooldown trwac.
-cooldown:
+cooldown: 30

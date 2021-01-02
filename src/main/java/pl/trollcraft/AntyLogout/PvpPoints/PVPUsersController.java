@@ -42,4 +42,8 @@ public class PVPUsersController {
         return null;
     }
 
+    public void save() {
+        AntyLogout.getInstance().getUsersConfig().set("dane graczy", instances);
+    }
+
 }

@@ -4,11 +4,13 @@ public class PVPUser {
      private String name;
      private int kills;
      private int deaths;
+     private int logouts;
 
-     public PVPUser(String name, int kills, int deaths) {
+     public PVPUser(String name, int kills, int deaths, int logouts) {
           this.name = name;
           this.kills = kills;
           this.deaths = deaths;
+          this.logouts = logouts;
      }
 
      public String getName() {
@@ -23,6 +25,10 @@ public class PVPUser {
         ++this.kills;
     }
 
+     public void substractKills() {
+        --this.kills;
+    }
+
      public int getDeaths() {
         return this.deaths;
     }
@@ -31,13 +37,20 @@ public class PVPUser {
         ++this.deaths;
     }
 
-     public void substractKills() {
-         --this.kills;
+     public int getLogouts() {
+         return this.logouts;
+     }
+
+     public void addLogouts() {
+         ++this.logouts;
      }
 
      public double getKDR() {
-         return this.deaths == 0 ?
-                 (double)this.kills : (double)this.kills / (double)this.deaths;
+         if (this.deaths == 0){
+             return this.kills;
+         } else {
+          return (double)this.kills / (double)this.deaths;
+         }
      }
 }
 
